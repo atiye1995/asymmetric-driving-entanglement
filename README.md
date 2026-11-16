@@ -1,5 +1,7 @@
 # Collective decay with a single-qubit drive
 
+[![DOI](https://zenodo.org/badge/1342584833.svg)](https://doi.org/10.5281/zenodo.24270116)
+
 Lindblad simulations of n qubits decaying collectively into a common zero-temperature bath, with a resonant drive on qubit 1,
 optional pure dephasing and independent decay. The entanglement (concurrence) of the undriven pair (2,3) is computed for the
 stationary state and for the transient (peak, lifetime, sudden death). Python, MIT licence.
@@ -68,4 +70,9 @@ limit, independent decay, dephasing, the transient peak ratio, the spectral diag
 disorder and the alpha^-2 error scaling of the strong-drive approximation.
 
 ## Citation
-See `CITATION.cff`. Archived on Zenodo: DOI to be added after the release.
+If you use this code, please cite it as described in `CITATION.cff`.
+
+This repository is archived on Zenodo:
+
+- **Version DOI (v1.0.0):** [10.5281/zenodo.24270117](https://doi.org/10.5281/zenodo.24270117)
+- **Concept DOI (all versions):** [10.5281/zenodo.24270116](https://doi.org/10.5281/zenodo.24270116)
