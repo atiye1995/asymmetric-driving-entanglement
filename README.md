@@ -10,14 +10,14 @@ stationary state and for the transient (peak, lifetime, sudden death). Python, M
 ## Run
 All results are written to `results/` (CSV/JSON tables and PDF figures).
 
-    python run_all.py              # tests + every script, full run (about 50 min on one core, <= 4 GB RAM; `extended_results.py` takes about 27 min)
-    python run_all.py --quick      # reduced run, about 3 min
+    python run_all.py              # tests + every script, full run (about 75 min on one core, <= 4 GB RAM; `extended_results.py` takes about 27 min, `robustness.py` about 15 min)
+    python run_all.py --quick      # reduced run, about 5 min
 
 In a notebook: `!python run_all.py --quick`.
 
 Step by step (the scripts are independent of each other's outputs; run from the repository folder):
 
-    python tests/test_all.py                                   # 13 tests (~10 s)
+    python tests/test_all.py                                   # 16 tests (~10 s)
     python collective_entanglement.py --outdir results         # full-space solver, n = 3..6
     python uniform_drive.py --outdir results                   # drive on all qubits
     python effective_model.py --outdir results --max-n 6       # strong-drive effective model
@@ -25,8 +25,12 @@ Step by step (the scripts are independent of each other's outputs; run from the 
     python extended_results.py --outdir results                # permutation-invariant method, n up to 14
     python independent_decay.py --outdir results               # independent (T1-type) decay
     python peak_map.py --outdir results                        # peak concurrence vs drive strength and dephasing
+    python spectral_analysis.py --outdir results               # spectral diagnostics of the projection (Eq. 2.3)
+    python strong_drive_error.py --outdir results              # accuracy of the strong-drive approximation vs alpha and n
+    python robustness.py --outdir results --n 4                # detuning / unequal coupling, n = 4 (20 realisations)
+    python robustness.py --outdir results --n 5 --nreal 3 --cases sel    # n = 5 (3 realisations, indicative)
 
-All scripts accept `--outdir`; `collective_entanglement.py`, `extended_results.py`, `independent_decay.py` and `peak_map.py` also accept `--quick`.
+All scripts accept `--outdir`; `collective_entanglement.py`, `extended_results.py`, `independent_decay.py`, `peak_map.py`, `spectral_analysis.py`, `strong_drive_error.py` and `robustness.py` also accept `--quick`.
 
 ## Scripts and outputs
 | Script | Content | Main outputs in `results/` |
@@ -39,8 +43,11 @@ All scripts accept `--outdir`; `collective_entanglement.py`, `extended_results.p
 | `independent_decay.py` | independent decay of each qubit | `table_independent_decay.csv`, `table_independent_decay_stationary.csv`, `fig8_independent_decay.pdf` |
 | `peak_map.py` | peak map C_peak(alpha, beta), peak ratio vs alpha, dimensions | `table_peak_map_n4.csv`, `table_peak_vs_alpha.csv`, `table_dimensions.csv`, `fig9_peak_map.pdf`, `fig10_dimension.pdf` |
 
-`symmetric_reduction.py` is a module used by `scaling_symmetric.py`. The folder `results/` in the repository holds the
-reference outputs of a full run.
+| `spectral_analysis.py` | null-space dimension, persistent oscillatory modes, smallest decay rate, conditioning and late-time distance for the projection of Eq. (2.3) | `table_spectral.csv`, `table_spectral_reduced.csv` |
+| `strong_drive_error.py` | relative deviation of C(inf) from the strong-drive value vs alpha (5..200) and n (4, 8, 12, 16); check against the effective model | `table_strong_drive_error.csv`, `table_strong_drive_limit_check.csv` |
+| `robustness.py` | random qubit detunings delta_i and unequal couplings (1+eps_i), full space, fixed seed | `table_robustness_n4.csv`, `table_robustness_n5.csv` |
+
+`symmetric_reduction.py` is a module used by `scaling_symmetric.py`, `strong_drive_error.py` and the tests. `python run_all.py` writes all outputs to `results/`; the folder in the repository holds the reference outputs of a full run.
 
 ## Model and conventions
     rho' = -i[H_d, rho] + 2 J rho J^+ - J^+J rho - rho J^+J + beta sum_i D[sz_i] rho + gamma_ind sum_i D[sigma^-_i] rho
@@ -54,9 +61,11 @@ reference outputs of a full run.
 * Lifetime tau_1/e: first crossing of C_peak/e after the peak; undefined if C_peak < 0.01 or no crossing occurs in the window.
 
 ## Tests
-`python tests/test_all.py` (or `python -m pytest -q tests`) checks conventions, the analytical values 4/9 (n = 3) and 1/4 (n = 4)
-of Memarzadeh and Mancini, positivity, the reduced methods against the full space, the effective-model derivation and
-independent decay.
+`python tests/test_all.py` (or `python -m pytest -q tests`) runs 16 tests: conventions and column stacking, trace/Hermiticity/positivity,
+the dephasing rate, the analytical values 4/9 (n = 3) and 1/4 (n = 4) of Memarzadeh and Mancini, the asymmetric-drive reference values,
+the uniform-drive baseline, the permutation-symmetric reduction against the full space, the effective model and its closed-form decoupled
+limit, independent decay, dephasing, the transient peak ratio, the spectral diagnostics, the lifting of the degeneracy by detuning/coupling
+disorder and the alpha^-2 error scaling of the strong-drive approximation.
 
 ## Citation
 See `CITATION.cff`. Archived on Zenodo: DOI to be added after the release.

@@ -20,6 +20,10 @@ def steps(out, quick):
         ("extended_results", ["extended_results.py", "--outdir", out] + q),
         ("independent_decay", ["independent_decay.py", "--outdir", out] + q),
         ("peak_map", ["peak_map.py", "--outdir", out] + q),
+        ("spectral_analysis", ["spectral_analysis.py", "--outdir", out] + q),
+        ("strong_drive_error", ["strong_drive_error.py", "--outdir", out] + q),
+        ("robustness_n4", ["robustness.py", "--outdir", out, "--n", "4"] + q),
+        ("robustness_n5", ["robustness.py", "--outdir", out, "--n", "5", "--nreal", "3", "--cases", "sel"] + q),
     ]
 
 
